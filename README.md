@@ -2,5 +2,6 @@
 
 * Using Parser combinartors
 * Features : Completely built from scratch without third party dependencies
-* TODO : * Support escape statements for string parsing 
-         * Support Floating points for numbers 
+* TODO :
+    * Support escape statements for string parse
+    * Support Floating points for numbers 
