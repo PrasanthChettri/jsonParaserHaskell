@@ -1,6 +1,7 @@
 module Main where
 
 import           Control.Applicative
+import           System.IO
 import           Data.Char
 import           Numeric
 import           System.Exit
@@ -85,14 +86,17 @@ jsonNumber :: Parser JsonValue
 jsonNumber = f <$> notNull (spanP isDigit)
                 where f ds = JsonNumber $ read ds
 
+-- RECURSIVE PARSER 
 jsonValue :: Parser JsonValue
-jsonValue =  jsonString <|> jsonNull <|> jsonBool <|> jsonNumber <|> jsonArray
+jsonValue =  jsonString <|> jsonNull <|> jsonBool <|> jsonNumber <|> jsonArray <|> jsonObject
 
+-- STRING PARSER 
 stringLiteral :: Parser String
-stringLiteral = spanP (/= '"')
+stringLiteral = charP '"' *> spanP (/= '"') <* charP '"'  
 
+-- RECURSIVE PARSER 
 jsonString :: Parser JsonValue 
-jsonString =  JsonString <$> ( charP '"' *> stringLiteral <* charP '"' ) 
+jsonString =  JsonString <$> stringLiteral
 
 ws :: Parser String 
 ws = spanP isSpace 
@@ -100,12 +104,33 @@ ws = spanP isSpace
 sepBy :: Parser a -> Parser b -> Parser [b]
 sepBy sep element =  (:) <$> element <*> many (sep *> element) <|> pure []
 
+jsonObject :: Parser JsonValue 
+jsonObject = 
+        JsonObject <$> 
+        (charP '{' *> ws *>  sepBy (ws *> charP ',' <* ws) pair  <* ws <* charP '}')
+                where
+                pair =  
+                    (\key _ value -> (key, value)) 
+                    <$> stringLiteral 
+                    <*> (ws *> charP ':' <* ws ) 
+                    <*> jsonValue 
+
 jsonArray :: Parser JsonValue
-jsonArray = JsonArray <$> ( charP '[' *> ws *>
-                            elements 
-                            <* ws <* charP ']' ) 
+jsonArray = JsonArray <$> (charP '[' *> ws *>
+                           elements 
+                           <* ws <* charP ']') 
                 where
                     elements = sepBy (ws *> charP  ',' <* ws) jsonValue
 
+va = runParser jsonValue 
+fileParser :: FilePath -> Parser a -> IO(Maybe a)
+fileParser filename parser =  do
+                input <- readFile filename
+                return (snd <$> runParser parser input)
+
+
 main :: IO()
-main = undefined
+main = do 
+    Just a <- fileParser "this.txt" jsonValue
+    putStrLn $ show  a
+    return ()
