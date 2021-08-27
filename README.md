@@ -10,8 +10,8 @@ Sample Input :
 ```
 {
     "name" : "Prasanth" ,
-    "languages" : ["Python" , "Haskell" , "APL", "Lisp"] ,
-    "Interests" : ["Backend Development" , "DAPP" , "Functional Programming"] ,
+    "languages" : ["Python" , "C++" , "Haskell"] ,
+    "Interests" : ["Backend Development" , "ML" , "Functional Programming"] ,
     "Age" : 300
 }
 ```
