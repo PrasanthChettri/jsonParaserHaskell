@@ -17,5 +17,5 @@ Sample Input :
 ```
 Output : 
 ```
-Just (JsonObject [("name",JsonString "Prasanth"),("languages",JsonArray [JsonString "Python",JsonString "Haskell",JsonString "APL",JsonString "Lisp"]),("Interests",JsonArray [JsonString "Backend Development",JsonString "DAPP",JsonString "Functional Programming"]),("Age",JsonNumber 300)])
+Just (JsonObject [("name",JsonString "Prasanth"),("languages",JsonArray [JsonString "Python",JsonString "C++",JsonString "Haskell"]),("Interests",JsonArray [JsonString "Backend Development",JsonString "ML",JsonString "Functional Programming"]),("Age",JsonNumber 300)])
 ```
